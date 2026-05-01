@@ -27,7 +27,17 @@ This fork replaces Groq with two always-on local servers:
 | **mlx-lm** (Qwen 3.5 4B, MLX 4-bit) | Post-processing / cleanup LLM | M-series GPU via Apple MLX |
 | **WhisperKit** (large-v3-turbo) | Speech-to-text transcription | Apple Neural Engine |
 
-Both run as launchd agents — they auto-start at login and restart on crash. Total RAM: ~3 GB. Total disk: ~3 GB. End-to-end latency: <1 s.
+Both run as launchd agents — they auto-start at login and restart on crash. End-to-end latency: <1 s.
+
+**Resource usage (idle, both servers loaded):**
+
+| | Memory | Disk |
+|---|---|---|
+| mlx-lm (Qwen 3.5 4B MLX-4bit) | ~2.7 GB | 2.9 GB |
+| WhisperKit (large-v3-turbo) | ~360 MB | 608 MB |
+| **Total** | **~3.1 GB** | **~3.5 GB** |
+
+Recommended: 16 GB RAM. Works on 8 GB but leaves less headroom for other apps. There's no separate VRAM budget — Apple Silicon uses unified memory, so the LLM weights live in the same pool as regular RAM. WhisperKit runs almost entirely on the Apple Neural Engine, so its memory footprint is minimal.
 
 ### Automated setup
 
