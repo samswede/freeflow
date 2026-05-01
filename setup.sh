@@ -70,8 +70,8 @@ newline
 
 AGENTS_DIR="$HOME/Library/LaunchAgents"
 
-MLX_PLIST="$AGENTS_DIR/com.samuel.mlx-lm.plist"
-WK_PLIST="$AGENTS_DIR/com.samuel.whisperkit.plist"
+MLX_PLIST="$AGENTS_DIR/com.freeflow.mlx-lm.plist"
+WK_PLIST="$AGENTS_DIR/com.freeflow.whisperkit.plist"
 
 info "Writing launchd plist: $MLX_PLIST"
 cat > "$MLX_PLIST" <<PLIST
@@ -79,7 +79,7 @@ cat > "$MLX_PLIST" <<PLIST
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>Label</key><string>com.samuel.mlx-lm</string>
+    <key>Label</key><string>com.freeflow.mlx-lm</string>
     <key>ProgramArguments</key>
     <array>
         <string>$VENV/bin/mlx_lm.server</string>
@@ -105,7 +105,7 @@ cat > "$WK_PLIST" <<PLIST
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>Label</key><string>com.samuel.whisperkit</string>
+    <key>Label</key><string>com.freeflow.whisperkit</string>
     <key>ProgramArguments</key>
     <array>
         <string>/opt/homebrew/bin/whisperkit-cli</string>
