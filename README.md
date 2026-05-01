@@ -2,16 +2,54 @@
   <img src="Resources/AppIcon-Source.png" width="128" height="128" alt="FreeFlow icon">
 </p>
 
-<h1 align="center">FreeFlow</h1>
+<h1 align="center">FreeFlow — local-only fork</h1>
 
 <p align="center">
   Free and open source alternative to <a href="https://wisprflow.ai">Wispr Flow</a>, <a href="https://superwhisper.com">Superwhisper</a>, and <a href="https://monologue.to">Monologue</a>.
 </p>
 
-<p align="center">
-  <a href="https://github.com/zachlatta/freeflow/releases/latest/download/FreeFlow.dmg"><b>⬇ Download FreeFlow.dmg</b></a><br>
-  <sub>Works on all Macs (Apple Silicon + Intel)</sub>
-</p>
+---
+
+> **This is a fork of [zachlatta/freeflow](https://github.com/zachlatta/freeflow) by [Zach Latta](https://github.com/zachlatta), currently maintained by [@marcbodea](https://github.com/marcbodea). All credit for the original app goes to them — this fork just swaps in a fully local, Apple-Silicon-native backend (no cloud, no API keys, no subscriptions).**
+>
+> If you want the easy, no-build experience with Groq cloud transcription, use [the upstream release](https://github.com/zachlatta/freeflow/releases/latest/download/FreeFlow.dmg).
+
+---
+
+## Local-only variant (Apple Silicon only)
+
+**Requirements:** Apple Silicon Mac (M1 or later), macOS 13+, Homebrew.
+
+This fork replaces Groq with two always-on local servers:
+
+| Component | What it does | Runs on |
+|---|---|---|
+| **mlx-lm** (Qwen 3.5 4B, MLX 4-bit) | Post-processing / cleanup LLM | M-series GPU via Apple MLX |
+| **WhisperKit** (large-v3-turbo) | Speech-to-text transcription | Apple Neural Engine |
+
+Both run as launchd agents — they auto-start at login and restart on crash. Total RAM: ~3 GB. Total disk: ~3 GB. End-to-end latency: <1 s.
+
+### Automated setup
+
+```sh
+git clone https://github.com/samswede/freeflow
+cd freeflow
+./setup.sh
+```
+
+`setup.sh` will:
+1. Check that you're on Apple Silicon
+2. `brew install whisperkit-cli`
+3. Create a Python venv and install `mlx-lm`
+4. Write and load launchd agents for both servers
+5. Build and install `/Applications/FreeFlow Dev.app`
+6. Wait for both servers to come up and print the FreeFlow settings table
+
+After it finishes, open FreeFlow Dev from the menu bar and paste in the settings it prints.
+
+> **Wizard tip:** In the API Key step, expand **"Advanced Provider Settings"** and set the **Base URL first** (`http://127.0.0.1:11435/v1`) before entering the API key. If you don't, the wizard validates against Groq's servers and rejects `local`.
+
+For full details, troubleshooting, and the recommended custom system prompt for code dictation, see [`CLAUDE.md`](CLAUDE.md).
 
 ---
 
@@ -20,7 +58,7 @@
 </p>
 
 <p align="center">
-  <i>Thank you to <a href="https://github.com/marcbodea">@marcbodea</a> for maintaining FreeFlow!</i>
+  <i>Original FreeFlow by <a href="https://github.com/zachlatta">@zachlatta</a> · maintained by <a href="https://github.com/marcbodea">@marcbodea</a></i>
 </p>
 
 ## Overview

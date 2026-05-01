@@ -8,14 +8,22 @@ class TranscriptionService {
     private let baseURL: URL
     private let transcriptionModel: String
     private let language: String?
+    private let transcriptionPrompt: String?
     private let transcriptionResponseFormat = "verbose_json"
     private let transcriptionTimeoutSeconds: TimeInterval = 20
+
+    // Whisper's decoder accepts ~224 tokens of prefix prompt (~896 chars
+    // for the latin-script terms we expect here). Stay under that so cloud
+    // providers don't reject the request and local servers don't silently
+    // truncate mid-term.
+    private static let maxTranscriptionPromptCharacters = 896
 
     init(
         apiKey: String,
         baseURL: String = "https://api.groq.com/openai/v1",
         transcriptionModel: String = "whisper-large-v3",
-        language: String? = nil
+        language: String? = nil,
+        transcriptionPrompt: String? = nil
     ) throws {
         self.apiKey = apiKey
         self.baseURL = try Self.normalizedBaseURL(from: baseURL)
@@ -23,6 +31,7 @@ class TranscriptionService {
         self.transcriptionModel = trimmedModel.isEmpty ? "whisper-large-v3" : trimmedModel
         let trimmedLanguage = language?.trimmingCharacters(in: .whitespacesAndNewlines)
         self.language = (trimmedLanguage?.isEmpty == false) ? trimmedLanguage : nil
+        self.transcriptionPrompt = Self.normalizeTranscriptionPrompt(transcriptionPrompt)
     }
 
     // Validate API key by hitting a lightweight endpoint
@@ -80,6 +89,7 @@ class TranscriptionService {
             model: transcriptionModel,
             responseFormat: transcriptionResponseFormat,
             language: language,
+            prompt: transcriptionPrompt,
             boundary: boundary
         )
 
@@ -150,6 +160,7 @@ class TranscriptionService {
         model: String,
         responseFormat: String,
         language: String?,
+        prompt: String?,
         boundary: String
     ) -> Data {
         var body = Data()
@@ -172,6 +183,12 @@ class TranscriptionService {
             append("\(language)\r\n")
         }
 
+        if let prompt, !prompt.isEmpty {
+            append("--\(boundary)\r\n")
+            append("Content-Disposition: form-data; name=\"prompt\"\r\n\r\n")
+            append("\(prompt)\r\n")
+        }
+
         append("--\(boundary)\r\n")
         append("Content-Disposition: form-data; name=\"file\"; filename=\"\(fileName)\"\r\n")
         append("Content-Type: \(audioContentType(for: fileName))\r\n\r\n")
@@ -180,6 +197,38 @@ class TranscriptionService {
         append("--\(boundary)--\r\n")
 
         return body
+    }
+
+    // Vocabulary terms come from the user's Custom Vocabulary setting as a
+    // free-form blob (newlines, commas, semicolons). Whisper's `prompt`
+    // field biases the decoder toward those tokens, materially improving
+    // recognition of names, code identifiers, and jargon.
+    private static func normalizeTranscriptionPrompt(_ raw: String?) -> String? {
+        guard let raw else { return nil }
+
+        let terms = raw
+            .split(whereSeparator: { $0 == "\n" || $0 == "," || $0 == ";" })
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }
+
+        var seen = Set<String>()
+        let deduped = terms.filter { seen.insert($0.lowercased()).inserted }
+        guard !deduped.isEmpty else { return nil }
+
+        // Drop terms from the tail until we fit Whisper's prompt budget.
+        // Tail-trim (not head-trim) so the user's most-recently-added terms
+        // — usually the most relevant — survive.
+        var kept: [String] = []
+        var runningLength = 0
+        for term in deduped {
+            let added = (kept.isEmpty ? 0 : 2) + term.count
+            if runningLength + added > maxTranscriptionPromptCharacters { break }
+            kept.append(term)
+            runningLength += added
+        }
+        guard !kept.isEmpty else { return nil }
+
+        return kept.joined(separator: ", ")
     }
 
     /// Map a non-200 HTTP status into a one-line user-readable message.
