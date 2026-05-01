@@ -46,7 +46,16 @@ cd /path/to/freeflow
 make CODESIGN_IDENTITY=-
 ```
 
-Build output: `build/FreeFlow Dev.app`. Installed copy: `/Applications/FreeFlow Dev.app` (re-sign after copying with `codesign --force --options runtime --sign - --entitlements FreeFlow.entitlements "/Applications/FreeFlow Dev.app"`).
+Build output: `build/FreeFlow Dev.app`. Install to `~/Applications/` (per-user app directory — macOS indexes it for Launchpad and Spotlight, no sudo required):
+
+```sh
+mkdir -p ~/Applications
+cp -R "build/FreeFlow Dev.app" ~/Applications/
+xattr -cr ~/Applications/"FreeFlow Dev.app"
+codesign --force --options runtime --sign - \
+  --entitlements FreeFlow.entitlements \
+  ~/Applications/"FreeFlow Dev.app"
+```
 
 `LSUIElement = true` in Info.plist — the app is a menu bar agent, **never appears in Dock or App Switcher**. Look for the icon top-right of the screen.
 
@@ -151,17 +160,21 @@ lsof -nP -iTCP:50060 -sTCP:LISTEN
 ```
 
 ### 5. Build and install FreeFlow
+
+`~/Applications/` is a per-user app directory that macOS indexes for Launchpad and Spotlight. It doesn't require sudo and works correctly in non-interactive contexts (e.g. when Claude Code runs the commands for you).
+
 ```sh
 cd /path/to/freeflow
 make CODESIGN_IDENTITY=-
 
-cp -R "build/FreeFlow Dev.app" /Applications/
-xattr -cr "/Applications/FreeFlow Dev.app"
+mkdir -p ~/Applications
+cp -R "build/FreeFlow Dev.app" ~/Applications/
+xattr -cr ~/Applications/"FreeFlow Dev.app"
 codesign --force --options runtime --sign - \
   --entitlements FreeFlow.entitlements \
-  "/Applications/FreeFlow Dev.app"
+  ~/Applications/"FreeFlow Dev.app"
 
-open "/Applications/FreeFlow Dev.app"
+open ~/Applications/"FreeFlow Dev.app"
 ```
 
 ### 6. Configure FreeFlow on first launch

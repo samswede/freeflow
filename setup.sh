@@ -141,12 +141,13 @@ info "Building FreeFlow from $REPO_DIR..."
 make -C "$REPO_DIR" CODESIGN_IDENTITY=- 2>&1 | tail -5
 newline
 
-info "Installing FreeFlow Dev.app to /Applications..."
-cp -R "$REPO_DIR/build/FreeFlow Dev.app" /Applications/
-xattr -cr "/Applications/FreeFlow Dev.app"
+info "Installing FreeFlow Dev.app to ~/Applications/ (no sudo required)..."
+mkdir -p "$HOME/Applications"
+cp -R "$REPO_DIR/build/FreeFlow Dev.app" "$HOME/Applications/"
+xattr -cr "$HOME/Applications/FreeFlow Dev.app"
 codesign --force --options runtime --sign - \
   --entitlements "$REPO_DIR/FreeFlow.entitlements" \
-  "/Applications/FreeFlow Dev.app"
+  "$HOME/Applications/FreeFlow Dev.app"
 newline
 
 # ── Gatekeeper note ───────────────────────────────────────────────────────────
@@ -155,7 +156,7 @@ warn "First launch — macOS security steps required"
 echo "  The app is ad-hoc signed (no Apple Developer ID), so macOS may block it."
 echo ""
 echo "  1. Open the app:"
-echo "     open \"/Applications/FreeFlow Dev.app\""
+echo "     open ~/Applications/\"FreeFlow Dev.app\""
 echo ""
 echo "  2. If macOS says the app can't be opened:"
 echo "     → Open System Settings → Privacy & Security"
