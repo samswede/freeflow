@@ -149,6 +149,33 @@ codesign --force --options runtime --sign - \
   "/Applications/FreeFlow Dev.app"
 newline
 
+# ── Gatekeeper note ───────────────────────────────────────────────────────────
+
+warn "First launch — macOS security steps required"
+echo "  The app is ad-hoc signed (no Apple Developer ID), so macOS may block it."
+echo ""
+echo "  1. Open the app:"
+echo "     open \"/Applications/FreeFlow Dev.app\""
+echo ""
+echo "  2. If macOS says the app can't be opened:"
+echo "     → Open System Settings → Privacy & Security"
+echo "     → Scroll down to the security section"
+echo "     → Click 'Open Anyway' next to FreeFlow Dev"
+echo ""
+echo "  3. Grant these permissions when prompted (or go to"
+echo "     System Settings → Privacy & Security for each):"
+echo ""
+echo "     ${BOLD}Microphone${RESET}     — pops up automatically on first dictation. Click Allow."
+echo ""
+echo "     ${BOLD}Accessibility${RESET}  — required for FreeFlow to paste text into other apps."
+echo "                    Will NOT work silently if missing. Go to:"
+echo "                    System Settings → Privacy & Security → Accessibility"
+echo "                    and toggle FreeFlow Dev on."
+echo ""
+echo "     ${BOLD}Screen Recording${RESET} — only needed for context-aware cleanup (reading"
+echo "                    what's on screen). Safe to deny if you don't use that feature."
+newline
+
 # ── Wait for servers ──────────────────────────────────────────────────────────
 
 info "Waiting for servers to come up (mlx-lm downloads ~2.5 GB on first run — be patient)..."
@@ -219,4 +246,4 @@ newline
 echo "  ${BOLD}Custom System Prompt${RESET} (Settings → Prompts → Custom System Prompt):"
 echo "  See the prompt in CLAUDE.md § 'Custom System Prompt'."
 newline
-echo "${GREEN}${BOLD}Setup complete. Open /Applications/FreeFlow Dev.app and hold Fn to dictate.${RESET}"
+echo "${GREEN}${BOLD}Setup complete. Follow the first-launch steps above, then hold Fn to dictate.${RESET}"
