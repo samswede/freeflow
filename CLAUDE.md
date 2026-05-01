@@ -8,7 +8,7 @@ This is a fork of [zachlatta/freeflow](https://github.com/zachlatta/freeflow), p
 |---|---|---|---|
 | Post-processing LLM | `mlx_lm.server` (Python venv) | `http://127.0.0.1:11435/v1` | launchd: `~/Library/LaunchAgents/com.freeflow.mlx-lm.plist` |
 | Transcription (Whisper) | `whisperkit-cli serve` (Homebrew) | `http://localhost:50060/v1` | launchd: `~/Library/LaunchAgents/com.freeflow.whisperkit.plist` |
-| FreeFlow app | `/Applications/FreeFlow Dev.app` | menu bar agent | "Launch at login" toggle in Settings → General |
+| FreeFlow app | `/Applications/FreeFlowLocal.app` | menu bar agent | "Launch at login" toggle in Settings → General |
 
 Logs: `~/Library/Logs/freeflow-stack/{mlx-lm,whisperkit}.{out,err}.log`
 
@@ -39,22 +39,22 @@ For code dictation this is a meaningful quality bump — Whisper now knows "Fast
 
 ## Build
 
-The default build target tries to codesign with identity `"FreeFlow Dev"` which won't exist on most machines. Override with ad-hoc:
+The default build target tries to codesign with identity `"FreeFlowLocal"` which won't exist on most machines. Override with ad-hoc:
 
 ```sh
 cd /path/to/freeflow
 make CODESIGN_IDENTITY=-
 ```
 
-Build output: `build/FreeFlow Dev.app`. Install to `~/Applications/` (per-user app directory — macOS indexes it for Launchpad and Spotlight, no sudo required):
+Build output: `build/FreeFlowLocal.app`. Install to `~/Applications/` (per-user app directory — macOS indexes it for Launchpad and Spotlight, no sudo required):
 
 ```sh
 mkdir -p ~/Applications
-cp -R "build/FreeFlow Dev.app" ~/Applications/
-xattr -cr ~/Applications/"FreeFlow Dev.app"
+cp -R "build/FreeFlowLocal.app" ~/Applications/
+xattr -cr ~/Applications/"FreeFlowLocal.app"
 codesign --force --options runtime --sign - \
   --entitlements FreeFlow.entitlements \
-  ~/Applications/"FreeFlow Dev.app"
+  ~/Applications/"FreeFlowLocal.app"
 ```
 
 `LSUIElement = true` in Info.plist — the app is a menu bar agent, **never appears in Dock or App Switcher**. Look for the icon top-right of the screen.
@@ -168,13 +168,13 @@ cd /path/to/freeflow
 make CODESIGN_IDENTITY=-
 
 mkdir -p ~/Applications
-cp -R "build/FreeFlow Dev.app" ~/Applications/
-xattr -cr ~/Applications/"FreeFlow Dev.app"
+cp -R "build/FreeFlowLocal.app" ~/Applications/
+xattr -cr ~/Applications/"FreeFlowLocal.app"
 codesign --force --options runtime --sign - \
   --entitlements FreeFlow.entitlements \
-  ~/Applications/"FreeFlow Dev.app"
+  ~/Applications/"FreeFlowLocal.app"
 
-open ~/Applications/"FreeFlow Dev.app"
+open ~/Applications/"FreeFlowLocal.app"
 ```
 
 ### 6. Configure FreeFlow on first launch
@@ -192,7 +192,7 @@ Settings to enter (also listed in the table at the bottom of this file):
 
 Approve macOS permission prompts on first dictation: Microphone, Accessibility (for paste), and optionally Screen Recording (not needed if you don't use context awareness).
 
-Toggle **Settings → General → Launch FreeFlow Dev at login**.
+Toggle **Settings → General → Launch FreeFlowLocal at login**.
 
 ### 7. Custom System Prompt (paste into Settings → Prompts)
 Optimised for code dictation into a terminal / CLI:

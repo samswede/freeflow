@@ -52,10 +52,10 @@ cd freeflow
 2. `brew install whisperkit-cli`
 3. Create a Python venv and install `mlx-lm`
 4. Write and load launchd agents for both servers
-5. Build and install `/Applications/FreeFlow Dev.app`
+5. Build and install `/Applications/FreeFlowLocal.app`
 6. Wait for both servers to come up and print the FreeFlow settings table
 
-After it finishes, open FreeFlow Dev from the menu bar and paste in the settings it prints.
+After it finishes, open FreeFlowLocal from the menu bar and paste in the settings it prints.
 
 > **Wizard tip:** In the API Key step, expand **"Advanced Provider Settings"** and set the **Base URL first** (`http://127.0.0.1:11435/v1`) before entering the API key. If you don't, the wizard validates against Groq's servers and rejects `local`.
 

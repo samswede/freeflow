@@ -141,13 +141,13 @@ info "Building FreeFlow from $REPO_DIR..."
 make -C "$REPO_DIR" CODESIGN_IDENTITY=- 2>&1 | tail -5
 newline
 
-info "Installing FreeFlow Dev.app to ~/Applications/ (no sudo required)..."
+info "Installing FreeFlowLocal.app to ~/Applications/ (no sudo required)..."
 mkdir -p "$HOME/Applications"
-cp -R "$REPO_DIR/build/FreeFlow Dev.app" "$HOME/Applications/"
-xattr -cr "$HOME/Applications/FreeFlow Dev.app"
+cp -R "$REPO_DIR/build/FreeFlowLocal.app" "$HOME/Applications/"
+xattr -cr "$HOME/Applications/FreeFlowLocal.app"
 codesign --force --options runtime --sign - \
   --entitlements "$REPO_DIR/FreeFlow.entitlements" \
-  "$HOME/Applications/FreeFlow Dev.app"
+  "$HOME/Applications/FreeFlowLocal.app"
 newline
 
 # ── Gatekeeper note ───────────────────────────────────────────────────────────
@@ -156,12 +156,12 @@ warn "First launch — macOS security steps required"
 echo "  The app is ad-hoc signed (no Apple Developer ID), so macOS may block it."
 echo ""
 echo "  1. Open the app:"
-echo "     open ~/Applications/\"FreeFlow Dev.app\""
+echo "     open ~/Applications/\"FreeFlowLocal.app\""
 echo ""
 echo "  2. If macOS says the app can't be opened:"
 echo "     → Open System Settings → Privacy & Security"
 echo "     → Scroll down to the security section"
-echo "     → Click 'Open Anyway' next to FreeFlow Dev"
+echo "     → Click 'Open Anyway' next to FreeFlowLocal"
 echo ""
 echo "  3. Grant these permissions when prompted (or go to"
 echo "     System Settings → Privacy & Security for each):"
@@ -171,7 +171,7 @@ echo ""
 echo "     ${BOLD}Accessibility${RESET}  — required for FreeFlow to paste text into other apps."
 echo "                    Will NOT work silently if missing. Go to:"
 echo "                    System Settings → Privacy & Security → Accessibility"
-echo "                    and toggle FreeFlow Dev on."
+echo "                    and toggle FreeFlowLocal on."
 echo ""
 echo "     ${BOLD}Screen Recording${RESET} — only needed for context-aware cleanup (reading"
 echo "                    what's on screen). Safe to deny if you don't use that feature."
@@ -221,7 +221,7 @@ echo "${BOLD}━━━━━━━━━━━━━━━━━━━━━━�
 echo "${BOLD}  Configure FreeFlow — paste these values into the app${RESET}"
 echo "${BOLD}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
 newline
-echo "  Open FreeFlow Dev from the menu bar (top-right of screen)."
+echo "  Open FreeFlowLocal from the menu bar (top-right of screen)."
 echo "  Go through the setup wizard or open Settings."
 newline
 echo "  ${BOLD}IMPORTANT:${RESET} In the API Key step, expand 'Advanced Provider Settings'"
@@ -242,7 +242,7 @@ echo "  │  Transcription Model         │  whisper-large-v3                  
 echo "  │  Stream audio while recording│  OFF  (WhisperKit is batch-only)    │"
 echo "  └─────────────────────────────────────────────────────────────────────┘"
 newline
-echo "  Also toggle: Settings → General → Launch FreeFlow Dev at login"
+echo "  Also toggle: Settings → General → Launch FreeFlowLocal at login"
 newline
 echo "  ${BOLD}Custom System Prompt${RESET} (Settings → Prompts → Custom System Prompt):"
 echo "  See the prompt in CLAUDE.md § 'Custom System Prompt'."

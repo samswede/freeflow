@@ -1,8 +1,8 @@
-APP_NAME ?= FreeFlow Dev
-BUNDLE_ID ?= com.zachlatta.freeflow.dev
+APP_NAME ?= FreeFlowLocal
+BUNDLE_ID ?= com.zachlatta.freeflow.local
 BUILD_DIR = build
 APP_BUNDLE = $(BUILD_DIR)/$(APP_NAME).app
-CODESIGN_IDENTITY ?= FreeFlow Dev
+CODESIGN_IDENTITY ?= -
 CONTENTS = $(APP_BUNDLE)/Contents
 MACOS_DIR = $(CONTENTS)/MacOS
 empty :=
@@ -17,12 +17,13 @@ ARCH ?= $(shell uname -m)
 # Pick the icon source based on which bundle we are building. Dev builds get
 # a distinct hammer-on-waveform icon so a developer's dock shows at a glance
 # which FreeFlow they are running when both are installed side by side.
-ifeq ($(APP_NAME),FreeFlow Dev)
-ICON_SOURCE = Resources/AppIcon-Dev-Source.png
-ICON_ICNS = Resources/AppIcon-Dev.icns
-else
+# All builds use the same custom icon (chaotic wave → structured bars)
 ICON_SOURCE = Resources/AppIcon-Source.png
 ICON_ICNS = Resources/AppIcon.icns
+ifeq (0,1)
+# Legacy: was conditional on APP_NAME for dev vs prod icon
+ICON_SOURCE_DEV = Resources/AppIcon-Dev-Source.png
+ICON_ICNS_DEV = Resources/AppIcon-Dev.icns
 endif
 
 .PHONY: all clean run icon dmg codesign-dmg notarize

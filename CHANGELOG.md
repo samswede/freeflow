@@ -15,7 +15,7 @@ This project uses semantic versioning for public releases. Use `MAJOR.MINOR.PATC
 - Output Language setting for automatically translating dictated text before it is pasted.
 - Transcription Language setting for choosing the language FreeFlow listens for during dictation.
 - Recording state flag file for external tools that need to know when FreeFlow is actively recording.
-- Distinct FreeFlow Dev app and menu bar icons so development builds are easier to tell apart from release builds.
+- Distinct FreeFlowLocal app and menu bar icons so development builds are easier to tell apart from release builds.
 
 ### Improved
 
