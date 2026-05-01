@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2a2a2e"/>
+      <stop offset="100%" stop-color="#1a1a1e"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1024" height="1024" rx="228" ry="228" fill="url(#bgGrad)"/>
+  <rect width="1024" height="1024" rx="228" ry="228" fill="none" stroke="white" stroke-opacity="0.08" stroke-width="2"/>
+
+  <!-- Single chaotic wave (raw speech) — left side -->
+  <path d="M 180 512
+    Q 220 340, 270 520
+    Q 320 700, 370 400
+    Q 420 280, 470 530
+    Q 510 640, 540 480"
+    fill="none" stroke="white" stroke-width="38" stroke-linecap="round" opacity="0.8"/>
+
+  <!-- Three clean bars (structured output) — right side -->
+  <line x1="640" y1="320" x2="640" y2="704" stroke="white" stroke-width="42" stroke-linecap="round" opacity="0.9"/>
+  <line x1="740" y1="380" x2="740" y2="644" stroke="white" stroke-width="42" stroke-linecap="round" opacity="0.9"/>
+  <line x1="840" y1="340" x2="840" y2="684" stroke="white" stroke-width="42" stroke-linecap="round" opacity="0.9"/>
+</svg>

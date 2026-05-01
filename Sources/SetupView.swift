@@ -1061,6 +1061,17 @@ struct SetupView: View {
         let baseURL = apiBaseURLInput.trimmingCharacters(in: .whitespacesAndNewlines)
         let resolvedBaseURL = baseURL.isEmpty ? AppState.defaultAPIBaseURL : baseURL
         appState.apiBaseURL = resolvedBaseURL
+
+        // Skip remote validation for local providers — they don't need real API keys
+        let isLocal = resolvedBaseURL.contains("localhost") || resolvedBaseURL.contains("127.0.0.1")
+        if isLocal {
+            appState.apiKey = key
+            withAnimation {
+                currentStep = nextStep(currentStep)
+            }
+            return
+        }
+
         isValidatingKey = true
         keyValidationError = nil
 
